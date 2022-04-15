@@ -6,6 +6,10 @@ HorizonRTP is super lightweight minecraft plugin for random teleport with many f
 You can find the downloads for each version with their release notes in the releases page.
 
 ##
+### Donation
+As the only developer of this project, I would like to ask for a little [donation](https://www.paypal.me/deszrama) to help me create this and other projects
+
+##
 ### Developers
 All the code was written by one developer as he is [deszrama](https://github.com/deszrama)
 
