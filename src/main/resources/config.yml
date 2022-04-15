@@ -1,0 +1,12 @@
+Messages:
+  PermissionsNeeded: '§3§oHorizonRTP §8>> §cSorry! you do not have permissions to execute this command'
+  SuccessfullTP: '§3§oHorizonRTP §8>> §aSuccessfully teleported'
+  DenialTP: '§3§oHorizonRTP §8>> §cError! Unfortunately, it was impossible to teleport you due to the dangerous teleportation!'
+  cooldown: '§3§oHorizonRTP §8>> §cYou must wait 5 seconds before next teleportation!'
+RandomTeleport:
+  autoRespawn: false
+  respawnMinX: 0
+  respawnMinZ: 0
+  respawnMaxX: 0
+  respawnMaxZ: 0
+  respawnWorld: 'world'

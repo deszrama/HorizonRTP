@@ -1,0 +1,10 @@
+main: me.deszrama.HorizonRandomTeleport.main.Main
+version: 1
+name: HorizonRandomTeleport
+author: deszrama
+api-version: 1.18
+commands:
+  HorizonRTP:
+    aliases:
+      - HorizonRandomTeleport
+      - RTP
