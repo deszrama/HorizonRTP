@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import java.util.List;
+
 public class HorizonRandomTeleport implements Listener, CommandExecutor {
 
 
@@ -24,6 +26,9 @@ public class HorizonRandomTeleport implements Listener, CommandExecutor {
                         player.sendMessage("§8* §7/HorizonRTP autoRespawn - Enables automatic repsawn when the player dies");
                         player.sendMessage("§8* §7/HorizonRTP setWorld (World name) - Sets the world on which the player has to respawn");
                         player.sendMessage("§8* §7/HorizonRTP setCoords (MinX MinZ MaxX MaxZ) - Sets the coordinates on which the player can respawn");
+                        player.sendMessage("§8* §7/HorizonRTP btnList - Lists the added buttons");
+                        player.sendMessage("§8* §7/HorizonRTP btnSet (id) (x y z) - Adds a button as a teleport button");
+                        player.sendMessage("§8* §7/HorizonRTP btnRem (id) - Removes a previously added button");
                         player.sendMessage("§8------>> §3§oHorizonRTP §8<<------");
                     } else {
                         player.sendMessage(Main.plugin.getConfig().getString("Messages.PermissionsNeeded").replace('&', '§'));
@@ -97,6 +102,74 @@ public class HorizonRandomTeleport implements Listener, CommandExecutor {
                             }
                         } else {
                             player.sendMessage("§3§oHorizonRTP §8>> §cYou must enter all coordinates!");
+                        }
+                    } else {
+                        player.sendMessage(Main.plugin.getConfig().getString("Messages.PermissionsNeeded").replace('&', '§'));
+                    }
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("btnList")){
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (player.hasPermission("HorizonRTP.admin")) {
+                        int i = 0;
+                        StringBuilder sb = new StringBuilder();
+                        for (String Buttons : Main.plugin.getConfig().getConfigurationSection("Buttons").getKeys(false)) {
+                            i++;
+                            String cnv = String.valueOf(i);
+                            int x = Main.plugin.getConfig().getInt("Buttons." + cnv + ".X");
+                            int y = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Y");
+                            int z = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Z");
+                            sb.append("§8* Button " + Buttons + " at XYZ: " + x + " / " + y + " / " + z + "\n");
+                        }
+                        player.sendMessage("§8------>> §3§oHorizonRTP Button List §8<<------");
+                        player.sendMessage(String.valueOf(sb));
+                        player.sendMessage("§8------>> §3§oHorizonRTP Button List §8<<------");
+
+                    } else {
+                        player.sendMessage(Main.plugin.getConfig().getString("Messages.PermissionsNeeded").replace('&', '§'));
+                    }
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("btnSet")){
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (player.hasPermission("HorizonRTP.admin")) {
+                        if (args[1] != null && args[2] != null && args[3] != null && args[4] != null) {
+                            if (isInt(args[1]) && isInt(args[2]) && isInt(args[3]) && isInt(args[4])) {
+                                Main.plugin.getConfig().set("Buttons." + args[1] + ".X", Integer.parseInt(args[2]));
+                                Main.plugin.getConfig().set("Buttons." + args[1] + ".Y", Integer.parseInt(args[3]));
+                                Main.plugin.getConfig().set("Buttons." + args[1] + ".Z", Integer.parseInt(args[4]));
+                                Main.plugin.saveConfig();
+                                player.sendMessage("§3§oHorizonRTP §8>> §aButton have been successfully set!");
+                            } else {
+                                player.sendMessage("§3§oHorizonRTP §8>> §cAll arguments must be an integer!");
+                            }
+                        } else {
+                            player.sendMessage("§3§oHorizonRTP §8>> §cYou must enter all arguments!");
+                        }
+                    } else {
+                        player.sendMessage(Main.plugin.getConfig().getString("Messages.PermissionsNeeded").replace('&', '§'));
+                    }
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("btnRem")){
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (player.hasPermission("HorizonRTP.admin")) {
+                        if (args[1] != null) {
+                            if (isInt(args[1])) {
+                                Main.plugin.getConfig().set("Buttons." + args[1], null);
+                                Main.plugin.saveConfig();
+                                player.sendMessage("§3§oHorizonRTP §8>> §aButton has been successfully deleted!");
+                            } else {
+                                player.sendMessage("§3§oHorizonRTP §8>> §cID must be an integer!");
+                            }
+                        } else {
+                            player.sendMessage("§3§oHorizonRTP §8>> §cYou must enter all arguments!");
                         }
                     } else {
                         player.sendMessage(Main.plugin.getConfig().getString("Messages.PermissionsNeeded").replace('&', '§'));

@@ -2,6 +2,7 @@ package me.deszrama.HorizonRandomTeleport.main;
 
 import me.deszrama.HorizonRandomTeleport.commands.HorizonRandomTeleport;
 import me.deszrama.HorizonRandomTeleport.functionality.RTP;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,6 +20,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("HorizonRTP").setExecutor(new HorizonRandomTeleport());
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new RTP(), this);
+        Metrics metrics = new Metrics(this, 14954);
 
         getConfig().options().copyDefaults(true);
         saveConfig();

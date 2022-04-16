@@ -8,6 +8,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -33,6 +35,33 @@ public class RTP implements Listener {
         }
     }
 
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e) {
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if(e.getClickedBlock().getType() == Material.STONE_BUTTON) {
+                World world2 = Bukkit.getWorld(Main.plugin.getConfig().getString("RandomTeleport.respawnWorld"));
+                Player player = e.getPlayer();
+                if (world2 != null){
+                    Location btnLoc = e.getClickedBlock().getLocation();
+                    int i = 0;
+                    for (String Buttons : Main.plugin.getConfig().getConfigurationSection("Buttons").getKeys(false)) {
+                        i++;
+                        String cnv = String.valueOf(i);
+                        int x1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".X");
+                        int y1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Y");
+                        int z1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Z");
+
+                        Location confLoc = new Location(world2, x1, y1, z1);
+
+                        if (btnLoc.equals(confLoc)){
+                            respawn(player);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static void respawn(Player player){
         if (player != null){
             World world = Bukkit.getWorld(Main.plugin.getConfig().getString("RandomTeleport.respawnWorld"));
@@ -41,9 +70,6 @@ public class RTP implements Listener {
                 int z = getRandomInt(Main.plugin.getConfig().getInt("RandomTeleport.respawnMaxZ"), Main.plugin.getConfig().getInt("RandomTeleport.respawnMinZ"));
 
                 safeTeleport(player, world, x, z);
-
-            } else {
-
             }
         }
     }
@@ -64,7 +90,6 @@ public class RTP implements Listener {
                     loop = false;
                     if (new Location(world, x, y, z).getBlock().getType() != Material.WATER && new Location(world, x, y, z).getBlock().getType() != Material.LAVA){
                         if (!Main.cooldown.get(player.getUniqueId())){
-
                             Location location = new Location(world, x, y, z);
                             player.teleport(location);
                             player.sendMessage(Main.plugin.getConfig().getString("Messages.SuccessfullTP").replace('&', '§'));
