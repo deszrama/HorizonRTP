@@ -27,7 +27,8 @@ public class HorizonRandomTeleport implements Listener, CommandExecutor {
                         player.sendMessage("§8* §7/HorizonRTP setWorld (World name) - Sets the world on which the player has to respawn");
                         player.sendMessage("§8* §7/HorizonRTP setCoords (MinX MinZ MaxX MaxZ) - Sets the coordinates on which the player can respawn");
                         player.sendMessage("§8* §7/HorizonRTP btnList - Lists the added buttons");
-                        player.sendMessage("§8* §7/HorizonRTP btnSet (id) (x y z) - Adds a button as a teleport button");
+                        player.sendMessage("§8* §7/HorizonRTP btnSet (id) (x y z) - Adds a button as rtp button");
+                        player.sendMessage("§8* §7/HorizonRTP btnAutoSet - click a button to set it as rtp button");
                         player.sendMessage("§8* §7/HorizonRTP btnRem (id) - Removes a previously added button");
                         player.sendMessage("§8------>> §3§oHorizonRTP §8<<------");
                     } else {
@@ -150,6 +151,18 @@ public class HorizonRandomTeleport implements Listener, CommandExecutor {
                         } else {
                             player.sendMessage("§3§oHorizonRTP §8>> §cYou must enter all arguments!");
                         }
+                    } else {
+                        player.sendMessage(Main.plugin.getConfig().getString("Messages.PermissionsNeeded").replace('&', '§'));
+                    }
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("btnAutoSet")){
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (player.hasPermission("HorizonRTP.admin")) {
+                        Main.adding.put(player.getUniqueId(), true);
+                        player.sendMessage("§3§oHorizonRTP §8>> §aClick a button to add it as a rtp button!");
                     } else {
                         player.sendMessage(Main.plugin.getConfig().getString("Messages.PermissionsNeeded").replace('&', '§'));
                     }

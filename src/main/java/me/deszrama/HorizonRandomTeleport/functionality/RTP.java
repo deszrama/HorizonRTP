@@ -25,6 +25,9 @@ public class RTP implements Listener {
     public void onJoin(PlayerJoinEvent e){
         Player player = e.getPlayer();
         Main.cooldown.put(player.getUniqueId(), false);
+        if (player.hasPermission("HorizonRTP.admin")){
+            Main.adding.put(player.getUniqueId(), false);
+        }
     }
 
     @EventHandler
@@ -38,24 +41,100 @@ public class RTP implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if(e.getClickedBlock().getType() == Material.STONE_BUTTON) {
-                World world2 = Bukkit.getWorld(Main.plugin.getConfig().getString("RandomTeleport.respawnWorld"));
+            if(e.getClickedBlock().getType() == Material.STONE_BUTTON || e.getClickedBlock().getType() == Material.ACACIA_BUTTON || e.getClickedBlock().getType() == Material.BIRCH_BUTTON || e.getClickedBlock().getType() == Material.CRIMSON_BUTTON || e.getClickedBlock().getType() == Material.WARPED_BUTTON || e.getClickedBlock().getType() == Material.OAK_BUTTON || e.getClickedBlock().getType() == Material.DARK_OAK_BUTTON || e.getClickedBlock().getType() == Material.JUNGLE_BUTTON || e.getClickedBlock().getType() == Material.POLISHED_BLACKSTONE_BUTTON || e.getClickedBlock().getType() == Material.SPRUCE_BUTTON) {
                 Player player = e.getPlayer();
-                if (world2 != null){
-                    Location btnLoc = e.getClickedBlock().getLocation();
-                    int i = 0;
-                    for (String Buttons : Main.plugin.getConfig().getConfigurationSection("Buttons").getKeys(false)) {
-                        i++;
-                        String cnv = String.valueOf(i);
-                        int x1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".X");
-                        int y1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Y");
-                        int z1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Z");
+                World world2 = Bukkit.getWorld(Main.plugin.getConfig().getString("RandomTeleport.respawnWorld"));
 
-                        Location confLoc = new Location(world2, x1, y1, z1);
+                if (player.hasPermission("HorizonRTP.admin")){
+                    if (Main.adding.get(player.getUniqueId())){
+                        Location btnLocA = e.getClickedBlock().getLocation();
+                        if (world2 != null){
+                            if (world2 == btnLocA.getWorld()){
+                                if (Main.plugin.getConfig().getConfigurationSection("Buttons") != null){
+                                    int i = 0;
+                                    for (String Buttons : Main.plugin.getConfig().getConfigurationSection("Buttons").getKeys(false)) {
+                                        i++;
+                                    }
+                                    i++;
+                                    Integer check_i = Main.plugin.getConfig().getInt("Buttons." + i);
 
-                        if (btnLoc.equals(confLoc)){
-                            respawn(player);
+                                    if (check_i != null){
+                                        Main.plugin.getConfig().set("Buttons." + i + ".X", btnLocA.getBlockX());
+                                        Main.plugin.getConfig().set("Buttons." + i + ".Y", btnLocA.getBlockY());
+                                        Main.plugin.getConfig().set("Buttons." + i + ".Z", btnLocA.getBlockZ());
+                                        player.sendMessage("§3§oHorizonRTP §8>> §aButton have been successfully set!");
+                                        Main.adding.put(player.getUniqueId(), false);
+                                        Main.plugin.saveConfig();
+                                    } else {
+                                        player.sendMessage("§3§oHorizonRTP §8>> §6Warning! ID is exist!");
+                                        int idnew = getRandomInt(10000, 500);
+                                        Integer new_check_i = Main.plugin.getConfig().getInt("Buttons." + idnew);
+                                        if (new_check_i != null){
+                                            Main.plugin.getConfig().set("Buttons." + i + ".X", btnLocA.getBlockX());
+                                            Main.plugin.getConfig().set("Buttons." + i + ".Y", btnLocA.getBlockY());
+                                            Main.plugin.getConfig().set("Buttons." + i + ".Z", btnLocA.getBlockZ());
+                                            player.sendMessage("§3§oHorizonRTP §8>> §aButton have been successfully set!");
+                                            Main.adding.put(player.getUniqueId(), false);
+                                            Main.plugin.saveConfig();
+                                        } else {
+                                            player.sendMessage("§3§oHorizonRTP §8>> §cError! Problem with giving new id!");
+                                        }
+                                    }
+                                } else {
+                                    Main.plugin.getConfig().set("Buttons." + 1 + ".X", btnLocA.getBlockX());
+                                    Main.plugin.getConfig().set("Buttons." + 1 + ".Y", btnLocA.getBlockY());
+                                    Main.plugin.getConfig().set("Buttons." + 1 + ".Z", btnLocA.getBlockZ());
+                                    player.sendMessage("§3§oHorizonRTP §8>> §aButton have been successfully set!");
+                                    Main.adding.put(player.getUniqueId(), false);
+                                    Main.plugin.saveConfig();
+                                }
+
+                            } else {
+                                player.sendMessage("§3§oHorizonRTP §8>> §cError! Add a button on the world specified in config!");
+                            }
+                        } else {
+                            player.sendMessage("§3§oHorizonRTP §8>> §cError! World with this name does not exist!");
                         }
+                    } else {
+                        if (world2 != null){
+                            Location btnLoc = e.getClickedBlock().getLocation();
+                            int i = 0;
+                            for (String Buttons : Main.plugin.getConfig().getConfigurationSection("Buttons").getKeys(false)) {
+                                i++;
+                                String cnv = String.valueOf(i);
+                                int x1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".X");
+                                int y1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Y");
+                                int z1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Z");
+
+                                Location confLoc = new Location(world2, x1, y1, z1);
+
+                                if (btnLoc.equals(confLoc)){
+                                    respawn(player);
+                                }
+                            }
+                        } else {
+                            player.sendMessage("§3§oHorizonRTP §8>> §cError! World with this name does not exist!");
+                        }
+                    }
+                } else {
+                    if (world2 != null){
+                        Location btnLoc = e.getClickedBlock().getLocation();
+                        int i = 0;
+                        for (String Buttons : Main.plugin.getConfig().getConfigurationSection("Buttons").getKeys(false)) {
+                            i++;
+                            String cnv = String.valueOf(i);
+                            int x1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".X");
+                            int y1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Y");
+                            int z1 = Main.plugin.getConfig().getInt("Buttons." + cnv + ".Z");
+
+                            Location confLoc = new Location(world2, x1, y1, z1);
+
+                            if (btnLoc.equals(confLoc)){
+                                respawn(player);
+                            }
+                        }
+                    } else {
+                        player.sendMessage("§3§oHorizonRTP §8>> §cError! World with this name does not exist!");
                     }
                 }
             }
