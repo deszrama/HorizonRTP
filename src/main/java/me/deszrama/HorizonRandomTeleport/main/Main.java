@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Main extends JavaPlugin implements Listener {
@@ -20,7 +21,9 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         plugin = this;
-        getCommand("HorizonRTP").setExecutor(new HorizonRandomTeleport());
+        Objects.requireNonNull(this.getCommand("RTP")).setExecutor(new HorizonRandomTeleport());
+        Objects.requireNonNull(this.getCommand("HorizonRTP")).setExecutor(new HorizonRandomTeleport());
+        Objects.requireNonNull(this.getCommand("HorizonRandomTeleport")).setExecutor(new HorizonRandomTeleport());
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new RTP(), this);
         Metrics metrics = new Metrics(this, 14954);

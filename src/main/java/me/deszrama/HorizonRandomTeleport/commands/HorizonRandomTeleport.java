@@ -8,8 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import java.util.List;
-
 public class HorizonRandomTeleport implements Listener, CommandExecutor {
 
 
